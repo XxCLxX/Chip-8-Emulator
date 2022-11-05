@@ -14,7 +14,8 @@ int main(int argc, char **argv)
 {
     struct chip8 chip8;
     chip8_init(&chip8);
-    chip8.registers.delay_timer = 255;
+    // chip8.registers.delay_timer = 255;
+    chip8.registers.sound_timer = 30;
 
     // chip8_screen_set(&chip8.screen, 10, 1);
     chip8_screen_draw_sprite(&chip8.screen, 32, 30, &chip8.memory.memory[0x00], 5);
@@ -86,11 +87,17 @@ int main(int argc, char **argv)
         }
         SDL_RenderPresent(renderer);
 
-        if(chip8.registers.delay_timer > 0)
+        if (chip8.registers.delay_timer > 0)
         {
             Sleep(100);
             chip8.registers.delay_timer -= 1;
             printf("Delay\n");
+        }
+
+        if (chip8.registers.sound_timer > 0)
+        {
+            Beep(13000, 100 * chip8.registers.sound_timer);
+            chip8.registers.sound_timer = 0;
         }
     }
 
