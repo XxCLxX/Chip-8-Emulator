@@ -40,14 +40,21 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    //printf("%s\n", buf);
-
     struct chip8 chip8;
     chip8_init(&chip8);
     chip8_load(&chip8, buf, size);
 
-    // chip8_screen_set(&chip8.screen, 10, 1);
-    chip8_screen_draw_sprite(&chip8.screen, 32, 30, &chip8.memory.memory[0x00], 5);
+    // chip8.registers.PC = 0;
+    // chip8.registers.V[2] = 0x10;
+    // chip8.registers.V[3] = 0x10;
+    // chip8_exec(&chip8, 0x5230);
+    // printf("%x\n", chip8.registers.PC);
+
+    // chip8.registers.V[0] = 200;
+    // chip8.registers.V[1] = 60;
+    // chip8_exec(&chip8, 0x8014);
+    // printf("%i\n", chip8.registers.V[0]);
+    // printf("%i\n", chip8.registers.V[0x0f]);
 
     SDL_Init(SDL_INIT_EVERYTHING);
     SDL_Window *window = SDL_CreateWindow(
@@ -130,8 +137,8 @@ int main(int argc, char **argv)
         }
 
         unsigned short opcode = chip8_memory_get_short(&chip8.memory, chip8.registers.PC);
-        chip8_exec(&chip8, opcode);
         chip8.registers.PC += 2; //Because the size of opcodes are 2 bytes
+        chip8_exec(&chip8, opcode);
         //printf("%x\n", opcode);
     }
 
