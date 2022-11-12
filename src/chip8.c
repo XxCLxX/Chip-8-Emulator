@@ -20,7 +20,7 @@ const char chip8_default_character_set[] = {
     0xf0, 0x90, 0xf0, 0x90, 0x90, // A
     0xe0, 0x90, 0xe0, 0x90, 0xe0, // B
     0xf0, 0x80, 0x80, 0x80, 0xf0, // C
-    0x0e, 0x90, 0x90, 0x90, 0xe0, // D
+    0xe0, 0x90, 0x90, 0x90, 0xe0, // D
     0xf0, 0x80, 0xf0, 0x80, 0xf0, // E
     0xf0, 0x80, 0xf0, 0x80, 0x80  // F
 };
@@ -81,7 +81,7 @@ static void chip8_exec_extend_opcode_eight(struct chip8* chip8, unsigned short o
         // 8xy5 - SUB Vx, Vy. Set vx = Vx - Vy, set Vf = Not borrow
         case 0x05:
             chip8->registers.V[0x0f] = false;
-            if(chip8->registers.V[x]> chip8->registers.V[y])
+            if(chip8->registers.V[x] > chip8->registers.V[y])
             {
                 chip8->registers.V[0x0f] = true;
             }
@@ -102,8 +102,8 @@ static void chip8_exec_extend_opcode_eight(struct chip8* chip8, unsigned short o
 
         // 8xyE - SHL Vx {, Vy}
         case 0x0E:
-        chip8->registers.V[0x0f] = chip8->registers.V[x] & 0b10000000;
-        chip8->registers.V[x] = chip8->registers.V[x] * 2;
+            chip8->registers.V[0x0f] = chip8->registers.V[x] & 0b10000000;
+            chip8->registers.V[x] = chip8->registers.V[x] * 2;
         break;
     }
 }
@@ -156,7 +156,7 @@ static void chip8_exec_extend_opcode_F(struct chip8* chip8, unsigned short opcod
 
         // fx1e - Add I, Vx
         case 0x1e:
-            chip8 -> registers.I += chip8->registers.V[x];
+            chip8->registers.I += chip8->registers.V[x];
         break;
         
         // fx29 - LD F, Vx
@@ -229,7 +229,7 @@ static void chip8_exec_extended(struct chip8 *chip8, unsigned short opcode)
 
         // SNE Vx, byte - 4xkk Skip next instruction if Vx!=kk
         case 0x4000: 
-            if(chip8->registers.V[x] == kk)
+            if(chip8->registers.V[x] != kk)
             {
                 chip8->registers.PC +=2;
             }
@@ -334,6 +334,6 @@ void chip8_exec(struct chip8 *chip8, unsigned short opcode)
         break;
 
         default:
-        chip8_exec_extended(chip8, opcode);
+            chip8_exec_extended(chip8, opcode);
     }
 }
